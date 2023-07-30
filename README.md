@@ -18,4 +18,4 @@ Manually download the [reference file](https://github.com/ersilia-os/groverfeat/
 
 You can take a subset of this data or run the whole thing.
 
-Use scripts/generate_predictions.py
+Can use scripts/generate_predictions.py, or just use the ersilia CLI.
