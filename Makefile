@@ -23,6 +23,7 @@ install-poetry:
 	@export PATH="$HOME/.local/bin:$PATH"
 
 setup-poetry:
+	@$(MAKE) fetch-ersilia
 	@poetry env use python3 && poetry install
 
 ## clean - Remove the virtual environment and clear out .pyc files
@@ -32,7 +33,7 @@ clean:
 
 ## black - Runs the Black Python formatter against the project
 black:
-	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/
+	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/
 
 ## format - Runs all formatting tools against the project
 format: black lint
@@ -50,8 +51,6 @@ test:
 	$(VIRTUAL_BIN)/pytest
 
 
-## install ersilia model hub as a submodule
-install-ersilia:
+## fetch ersilia model hub repo
+fetch-ersilia:
 	@git clone https://github.com/ersilia-os/ersilia.git
-	@pip install -e ersilia
-
