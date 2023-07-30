@@ -48,3 +48,10 @@ mypy:
 ## test - Test the project
 test:
 	$(VIRTUAL_BIN)/pytest
+
+
+## install ersilia model hub as a submodule
+install-ersilia:
+	@git clone https://github.com/ersilia-os/ersilia.git
+	@pip install -e ersilia
+
