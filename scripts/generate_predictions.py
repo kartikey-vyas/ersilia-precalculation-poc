@@ -3,8 +3,7 @@ import sys
 import time
 from typing import List
 
-import pandas as pd
-from ersilia import ErsiliaModel
+from ersilia import ErsiliaModel  # type: ignore
 
 EXAMPLE_MODEL_ID = "eos3b5e"
 
@@ -33,6 +32,6 @@ if __name__ == "__main__":
 
         start = time.time()
         predictions = mdl.run(input_items, output="pandas")
-        logger.info(f"Inference took {time.time() - start :2f} seconds")
+        logger.info(f"Inference took {time.tim() - start :2f} seconds")
 
     predictions.to_csv(output_path)

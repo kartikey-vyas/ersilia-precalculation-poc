@@ -3,7 +3,8 @@ PROJECT_NAME := ersilia_precalc_poc
 TEST_DIR := tests
 VIRTUAL_ENV := .venv
 VIRTUAL_BIN := $(VIRTUAL_ENV)/bin
-.PHONY: help install clean black lint format test
+.DEFAULT_GOAL := help
+.PHONY: help install clean black lint format test hooks install-hooks install-ersilia
 
 ## help - Display help about make targets for this Makefile
 help:
@@ -15,7 +16,7 @@ install:
 	@if [ "$(shell which poetry)" = "" ]; then \
 		$(MAKE) install-poetry; \
 	fi
-	@$(MAKE) setup-poetry
+	@$(MAKE) setup-poetry install-hooks
 
 install-poetry:
 	@echo "Installing poetry..."
@@ -23,7 +24,6 @@ install-poetry:
 	@export PATH="$HOME/.local/bin:$PATH"
 
 setup-poetry:
-	@$(MAKE) fetch-ersilia
 	@poetry env use python3 && poetry install
 
 ## clean - Remove the virtual environment and clear out .pyc files
@@ -33,24 +33,38 @@ clean:
 
 ## black - Runs the Black Python formatter against the project
 black:
-	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/
+	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## format - Runs all formatting tools against the project
 format: black lint
 
 ## lint - Lint the project
 lint:
-	$(VIRTUAL_BIN)/ruff $(PROJECT_NAME)/ $(TEST_DIR)/
+	$(VIRTUAL_BIN)/ruff $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## mypy - Run mypy type checking on the project
 mypy:
-	$(VIRTUAL_BIN)/mypy $(PROJECT_NAME)/ $(TEST_DIR)/
+	$(VIRTUAL_BIN)/mypy $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## test - Test the project
 test:
-	$(VIRTUAL_BIN)/pytest
+	$(VIRTUAL_BIN)/pytest $(TEST_DIR)/
 
+# fetch ersilia model hub repo
+install-ersilia:
+	@if [ ! -d "./ersilia" ]; then \
+		git clone https://github.com/ersilia-os/ersilia.git && poetry install; \
+	fi
 
-## fetch ersilia model hub repo
-fetch-ersilia:
-	@git clone https://github.com/ersilia-os/ersilia.git
+## hooks - run pre-commit git hooks on all files
+hooks: setup-poetry
+	@$(VIRTUAL_ENV)/bin/pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage push
+
+install-hooks: .git/hooks/pre-commit .git/hooks/pre-push
+	$(VIRTUAL_ENV)/bin/pre-commit install-hooks
+	
+.git/hooks/pre-commit:
+	$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-commit
+
+.git/hooks/pre-push: 
+	$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-push
