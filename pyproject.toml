@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ersilia-precalc-poc"
+name = "ersilia_precalc_poc"
 version = "0.1.0"
 description = "POC Repository to experiment with pre-calculating outputs for the Ersilia Model Hub"
 authors = ["Kartikey Vyas <kartikeyvyas23@gmail.com>"]
@@ -13,6 +13,7 @@ bentoml = "^1.1.0"
 urllib3 = "^1"
 ersilia = {path = "ersilia", develop = true}
 pandas = "^2.0.3"
+boto3 = "^1.28.26"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"

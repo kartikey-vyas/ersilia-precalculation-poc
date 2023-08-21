@@ -11,6 +11,8 @@ Requirements for the model hub
 
 Set up virtual environment with `make install`, and activate it with `source .venv/bin/activate`
 
+We use `poetry` for virtual env creation and dependency management
+
 ## Generating example pre-calculations
 
 ### Fetch input data
