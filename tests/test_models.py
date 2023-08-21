@@ -2,8 +2,11 @@ from ersilia_precalc_poc.models import Prediction
 
 
 def test_prediction():
-    fixture = {"model_id": "a", "input_key": "b", "smiles": "C", "output": 1.0}
+    fixture = {"model_id": "a", "input_key": "b", "smiles": "C", "output": 1}
 
-    pred = Prediction(**fixture)
+    prediction = Prediction(model_id="a", input_key="b", smiles="C", output=1)
 
-    assert isinstance(pred, Prediction)
+    constructed_pred = Prediction.model_construct(**fixture)
+
+    assert prediction.model_dump() == fixture
+    assert constructed_pred == prediction

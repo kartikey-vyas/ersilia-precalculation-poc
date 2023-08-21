@@ -23,6 +23,8 @@ def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction])
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(dynamodb_table)
 
+    logger.info(f"Writing {len(precalcs)} using the boto3 batch writer to DynamoDB")
+
     with table.batch_writer() as writer:
         for item in precalcs:
             writer.put_item(

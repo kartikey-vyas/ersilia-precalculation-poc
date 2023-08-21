@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Prediction:
+class Prediction(BaseModel):
     """Dataclass to represent a single prediction"""
 
     model_id: str
