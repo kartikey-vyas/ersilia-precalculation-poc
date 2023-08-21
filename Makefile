@@ -33,18 +33,18 @@ clean:
 
 ## black - Runs the Black Python formatter against the project
 black:
-	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/
+	$(VIRTUAL_BIN)/black $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## format - Runs all formatting tools against the project
 format: black lint
 
 ## lint - Lint the project
 lint:
-	$(VIRTUAL_BIN)/ruff $(PROJECT_NAME)/ $(TEST_DIR)/
+	$(VIRTUAL_BIN)/ruff $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## mypy - Run mypy type checking on the project
 mypy:
-	$(VIRTUAL_BIN)/mypy $(PROJECT_NAME)/ $(TEST_DIR)/
+	$(VIRTUAL_BIN)/mypy $(PROJECT_NAME)/ $(TEST_DIR)/ scripts/ workflows/
 
 ## test - Test the project
 test:
@@ -58,7 +58,7 @@ install-ersilia:
 
 ## hooks - run pre-commit git hooks on all files
 hooks: setup-poetry
-	$(VIRTUAL_ENV)/bin/pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage push
+	@$(VIRTUAL_ENV)/bin/pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage push
 
 install-hooks: .git/hooks/pre-commit .git/hooks/pre-push
 	$(VIRTUAL_ENV)/bin/pre-commit install-hooks

@@ -3,7 +3,7 @@ import sys
 import time
 from typing import List
 
-from ersilia import ErsiliaModel
+from ersilia import ErsiliaModel  # type: ignore
 
 EXAMPLE_MODEL_ID = "eos3b5e"
 

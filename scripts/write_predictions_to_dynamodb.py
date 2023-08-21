@@ -55,6 +55,6 @@ if __name__ == "__main__":
         df = pd.read_csv(cli_choice)
         print(f"read {len(df)} predictions from {cli_choice}")
 
-        data = predictions_from_dataframe("examplemodel", df)
+        pred_data = predictions_from_dataframe("examplemodel", df)
 
-        write_precalcs_batch_writer(DYNAMODB_TABLE_NAME, data)
+        write_precalcs_batch_writer(DYNAMODB_TABLE_NAME, pred_data)
