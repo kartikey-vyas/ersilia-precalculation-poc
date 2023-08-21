@@ -1,9 +1,10 @@
 import sys
+import time
 
 import boto3
 import pandas as pd
 
-from ersilia_precalc_poc.predictions import (
+from ersilia_precalc_poc.write import (
     predictions_from_dataframe,
     write_precalcs_batch_writer,
 )
@@ -46,6 +47,7 @@ if __name__ == "__main__":
                         "SK": f"INPUTKEY#{item['input_key']}",
                         "Smiles": item["smiles"],
                         "Precalculation": item["output"],
+                        "Timestamp": str(time.time())
                     }
                 )
     else:
