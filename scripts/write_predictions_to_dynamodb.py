@@ -47,7 +47,7 @@ if __name__ == "__main__":
                         "SK": f"INPUTKEY#{item['input_key']}",
                         "Smiles": item["smiles"],
                         "Precalculation": item["output"],
-                        "Timestamp": str(time.time())
+                        "Timestamp": str(time.time()),
                     }
                 )
     else:

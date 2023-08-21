@@ -19,7 +19,6 @@ def format_precalcs_for_dynamodb(precalcs: List[Prediction]):
 
 # here are a few different ways we could write a large number of predictions to dynamodb
 def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction]):
-
     # todo: timestamp/versioning for predictions written to dynamo
 
     dynamodb = boto3.resource("dynamodb")
@@ -32,7 +31,9 @@ def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction])
                     "PK": f"MODELID#{item.model_id}",
                     "SK": f"INPUTKEY#{item.input_key}",
                     "Smiles": item.smiles,
-                    "Precalculation": json.loads(json.dumps(item.output), parse_float=Decimal),
+                    "Precalculation": json.loads(
+                        json.dumps(item.output), parse_float=Decimal
+                    ),
                     "Timestamp": str(time.time()),
                 }
             )
