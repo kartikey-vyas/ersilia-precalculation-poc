@@ -64,7 +64,7 @@ install-hooks: .git/hooks/pre-commit .git/hooks/pre-push
 	$(VIRTUAL_ENV)/bin/pre-commit install-hooks
 	
 .git/hooks/pre-commit:
-	$(VIRTUAL_ENV)/bin/pre-commit install -t pre-commit
+	$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-commit
 
 .git/hooks/pre-push: 
-	$(VIRTUAL_ENV)/bin/pre-commit install -t pre-push
+	$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-push
