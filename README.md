@@ -16,7 +16,7 @@ We use `poetry` for virtual env creation and dependency management
 ## Generating example pre-calculations
 
 ### Fetch input data
-Manually download the [reference file](https://github.com/ersilia-os/groverfeat/raw/main/data/reference_library.csv) and save it to the root directory of this repo. The file is ~100MB.
+Manually download the [reference file](https://github.com/ersilia-os/groverfeat/raw/main/data/reference_library.csv) and save it to a directory of this repo named `data/`. The file is ~100MB.
 
 You can take a subset of this data or run the whole thing.
 
