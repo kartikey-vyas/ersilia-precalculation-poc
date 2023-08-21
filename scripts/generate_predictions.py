@@ -3,7 +3,6 @@ import sys
 import time
 from typing import List
 
-import pandas as pd
 from ersilia import ErsiliaModel
 
 EXAMPLE_MODEL_ID = "eos3b5e"
