@@ -1,4 +1,10 @@
-from ersilia_precalc_poc.models import Prediction
+import pandas as pd
+import pytest
+from pandera import check_types
+from pandera.errors import SchemaError
+from pandera.typing import DataFrame
+
+from ersilia_precalc_poc.models import Prediction, PredictionSchema
 
 
 def test_prediction():
@@ -6,7 +12,72 @@ def test_prediction():
 
     prediction = Prediction(model_id="a", input_key="b", smiles="C", output=1)
 
-    constructed_pred = Prediction.model_construct(**fixture)
+    constructed_pred = Prediction.construct(**fixture)
 
-    assert prediction.model_dump() == fixture
+    assert prediction.dict() == fixture
     assert constructed_pred == prediction
+
+
+@check_types
+def _validate(df: DataFrame[PredictionSchema]) -> DataFrame[PredictionSchema]:
+    return df
+
+
+def test_implicit_validation_success():
+    fixture = pd.DataFrame(
+        {
+            "key": ["PCQFQFRJSWBMEL-UHFFFAOYSA-N"],
+            "input": ["COC(=O)C1=CC=CC2=C1C(=O)C1=CC([N+](=O)[O-])=CC=C21"],
+            "mw": [283.239],
+        }
+    )
+
+    _validate(fixture)
+
+
+def test_implicit_validation_fail():
+    fixture = pd.DataFrame(
+        {"key": ["bad-inchi-key"], "input": ["COC(=O)C1=CC=CC2=C1C(=O)C1=CC([N+](=O)[O-])=CC=C21"], "mw": [283.239]}
+    )
+
+    with pytest.raises(SchemaError):
+        _validate(fixture)
+
+
+def test_prediction_schema_valid_df():
+    fixture = pd.DataFrame(
+        {
+            "key": ["PCQFQFRJSWBMEL-UHFFFAOYSA-N"],
+            "input": ["COC(=O)C1=CC=CC2=C1C(=O)C1=CC([N+](=O)[O-])=CC=C21"],
+            "mw": [283.239],
+        }
+    )
+
+    validated_df = PredictionSchema.validate(fixture)
+
+    assert validated_df.equals(fixture)
+
+
+def test_prediction_schema_invalid_df():
+    not_inchi_key = pd.DataFrame(
+        {"key": ["not an inchi key"], "input": ["COC(=O)C1=CC=CC2=C1C(=O)C1=CC([N+](=O)[O-])=CC=C21"], "mw": [283.239]}
+    )
+
+    bad_input = pd.DataFrame({"key": ["PCQFQFRJSWBMEL-UHFFFAOYSA-N"], "input": [1923], "mw": [283.239]})
+
+    bad_mw = pd.DataFrame(
+        {
+            "key": ["PCQFQFRJSWBMEL-UHFFFAOYSA-N"],
+            "input": ["COC(=O)C1=CC=CC2=C1C(=O)C1=CC([N+](=O)[O-])=CC=C21"],
+            "mw": ["bad mw"],
+        }
+    )
+
+    with pytest.raises(SchemaError):
+        PredictionSchema.validate(not_inchi_key)
+
+    with pytest.raises(SchemaError):
+        PredictionSchema.validate(bad_input)
+
+    with pytest.raises(SchemaError):
+        PredictionSchema.validate(bad_mw)

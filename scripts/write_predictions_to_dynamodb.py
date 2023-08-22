@@ -4,10 +4,8 @@ import time
 import boto3
 import pandas as pd
 
-from ersilia_precalc_poc.write import (
-    predictions_from_dataframe,
-    write_precalcs_batch_writer,
-)
+from ersilia_precalc_poc.read import get_predictions_from_dataframe
+from ersilia_precalc_poc.write import write_precalcs_batch_writer
 
 # aws region: eu-central-1
 # dynamodb table name: precalculations-poc
@@ -53,8 +51,9 @@ if __name__ == "__main__":
     else:
         # look for csv at provided path
         df = pd.read_csv(cli_choice)
+
         print(f"read {len(df)} predictions from {cli_choice}")
 
-        pred_data = predictions_from_dataframe("examplemodel", df)
+        pred_data = get_predictions_from_dataframe("examplemodel", df)
 
         write_precalcs_batch_writer(DYNAMODB_TABLE_NAME, pred_data)
