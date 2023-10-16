@@ -5,7 +5,6 @@ from decimal import Decimal
 from typing import List
 
 import boto3
-import pandas as pd
 
 from ersilia_precalc_poc.models import Prediction
 
@@ -23,12 +22,14 @@ def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction])
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(dynamodb_table)
 
+    logger.info(f"Writing {len(precalcs)} using the boto3 batch writer to DynamoDB")
+
     with table.batch_writer() as writer:
         for item in precalcs:
             writer.put_item(
                 Item={
-                    "PK": f"MODELID#{item.model_id}",
-                    "SK": f"INPUTKEY#{item.input_key}",
+                    "PK": f"INPUTKEY#{item.input_key}",
+                    "SK": f"MODELID#{item.model_id}",
                     "Smiles": item.smiles,
                     "Precalculation": json.loads(json.dumps(item.output), parse_float=Decimal),
                     "Timestamp": str(time.time()),
@@ -40,17 +41,3 @@ def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction])
 #     # dynamodb = boto3.client("dynamodb")
 #     print("unimplemented")
 #     pass
-
-
-def predictions_from_dataframe(model_id: str, prediction_df: pd.DataFrame) -> List[Prediction]:
-    predictions = prediction_df.to_dict("records")
-
-    return [
-        Prediction(
-            model_id=model_id,
-            input_key=prediction["key"],
-            smiles=prediction["input"],
-            output=prediction["mw"],
-        )
-        for prediction in predictions
-    ]
