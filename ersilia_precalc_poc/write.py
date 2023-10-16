@@ -28,8 +28,8 @@ def write_precalcs_batch_writer(dynamodb_table: str, precalcs: List[Prediction])
         for item in precalcs:
             writer.put_item(
                 Item={
-                    "PK": f"MODELID#{item.model_id}",
-                    "SK": f"INPUTKEY#{item.input_key}",
+                    "PK": f"INPUTKEY#{item.input_key}",
+                    "SK": f"MODELID#{item.model_id}",
                     "Smiles": item.smiles,
                     "Precalculation": json.loads(json.dumps(item.output), parse_float=Decimal),
                     "Timestamp": str(time.time()),

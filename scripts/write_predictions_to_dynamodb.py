@@ -41,8 +41,8 @@ if __name__ == "__main__":
             for item in data:
                 writer.put_item(
                     Item={
-                        "PK": f"MODELID#{item['model_id']}",
-                        "SK": f"INPUTKEY#{item['input_key']}",
+                        "PK": f"INPUTKEY#{item['input_key']}",
+                        "SK": f"MODELID#{item['model_id']}",
                         "Smiles": item["smiles"],
                         "Precalculation": item["output"],
                         "Timestamp": str(time.time()),
